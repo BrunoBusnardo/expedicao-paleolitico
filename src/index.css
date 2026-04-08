@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-paleo-earth: #4a3728;
+  --color-paleo-stone: #8b8c89;
+  --color-paleo-sand: #d2b48c;
+  --color-paleo-fire: #e25822;
+  --color-paleo-cave: #1a1a1a;
+}
+
+@layer base {
+  body {
+    @apply bg-[#f5f2ed] text-paleo-cave font-sans;
+    background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  }
+}
+
+.cave-wall {
+  background-color: #f5f2ed;
+  background-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.02) 0%, transparent 100%),
+                    url("https://www.transparenttextures.com/patterns/natural-paper.png");
+}
+
+.fire-glow {
+  box-shadow: 0 0 20px rgba(226, 88, 34, 0.3);
+}
+
