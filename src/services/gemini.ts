@@ -3,8 +3,10 @@ import { GroupAnswers, ElderFeedback } from "../types";
 import { QUESTIONS } from "../constants";
 
 // Tenta ler a chave de diferentes fontes para garantir compatibilidade com Vercel/Vite
-const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
+const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.GEMINI_API_KEY || "";
 const ai = new GoogleGenAI({ apiKey });
+
+const MODEL_NAME = "gemini-flash-latest";
 
 /**
  * Gera um rascunho da história para uma fase específica com base nas respostas.
@@ -32,7 +34,7 @@ export async function generatePhaseDraft(questionId: number, answer: string): Pr
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: MODEL_NAME,
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -79,7 +81,7 @@ export async function verifyPhaseDraft(questionId: number, draft: string): Promi
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: MODEL_NAME,
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -135,7 +137,7 @@ export async function getElderFeedback(questionId: number, draft: string, consul
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: MODEL_NAME,
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -182,7 +184,7 @@ export async function generateFinalStory(answers: GroupAnswers, verifiedDrafts: 
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: MODEL_NAME,
       contents: prompt,
     });
     return response.text || "A história se perdeu no tempo...";
