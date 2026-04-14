@@ -2,11 +2,11 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { GroupAnswers, ElderFeedback } from "../types";
 import { QUESTIONS } from "../constants";
 
-// Tenta ler a chave de diferentes fontes para garantir compatibilidade com Vercel/Vite
-const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || (import.meta as any).env?.GEMINI_API_KEY || "";
+// Tenta ler a chave de diferentes fontes, priorizando o padrão VITE_ para o frontend
+const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
 const ai = new GoogleGenAI({ apiKey });
 
-const MODEL_NAME = "gemini-flash-latest";
+const MODEL_NAME = "gemini-3-flash-preview";
 
 /**
  * Gera um rascunho da história para uma fase específica com base nas respostas.
@@ -51,7 +51,8 @@ export async function generatePhaseDraft(questionId: number, answer: string): Pr
     return JSON.parse(response.text || "{}");
   } catch (error) {
     console.error("Erro ao gerar rascunho:", error);
-    return { draft: "Ocorreu um erro ao conectar com os ancestrais.", hasErrors: false };
+    const msg = error instanceof Error ? error.message : "Erro desconhecido";
+    return { draft: `Erro de conexão: ${msg}. Verifique a chave VITE_GEMINI_API_KEY na Vercel.`, hasErrors: false };
   }
 }
 
