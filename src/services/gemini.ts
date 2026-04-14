@@ -2,7 +2,9 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { GroupAnswers, ElderFeedback } from "../types";
 import { QUESTIONS } from "../constants";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+// Tenta ler a chave de diferentes fontes para garantir compatibilidade com Vercel/Vite
+const apiKey = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY || "";
+const ai = new GoogleGenAI({ apiKey });
 
 /**
  * Gera um rascunho da história para uma fase específica com base nas respostas.
