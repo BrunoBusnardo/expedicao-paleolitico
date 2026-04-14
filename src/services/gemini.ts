@@ -2,8 +2,8 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { GroupAnswers, ElderFeedback } from "../types";
 import { QUESTIONS } from "../constants";
 
-// Tenta ler a chave de diferentes fontes, priorizando o padrão VITE_ para o frontend
-const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
+// Tenta ler a chave de diferentes fontes, priorizando o padrão VITE_ que o Vite exige para o frontend
+const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || "";
 const ai = new GoogleGenAI({ apiKey });
 
 const MODEL_NAME = "gemini-3-flash-preview";
