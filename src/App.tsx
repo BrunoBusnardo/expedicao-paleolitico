@@ -495,70 +495,80 @@ export default function App() {
       {/* Draggable Elder Popup */}
       <AnimatePresence>
         {state.isElderOpen && (
-          <Draggable nodeRef={nodeRef} handle=".elder-handle" bounds="parent">
+          <Draggable nodeRef={nodeRef} handle=".elder-handle" cancel=".no-drag" bounds="parent">
             <motion.div 
               ref={nodeRef}
               initial={{ opacity: 0, scale: 0.8, y: 100 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 100 }}
-              className="fixed bottom-10 right-10 w-80 md:w-96 z-50"
+              className="fixed bottom-4 right-4 md:bottom-10 md:right-10 w-[calc(100vw-2rem)] md:w-96 z-[70]"
             >
-              <div className="bg-white rounded-3xl shadow-2xl border-2 border-paleo-earth overflow-hidden flex flex-col max-h-[500px]">
-                <div className="elder-handle bg-paleo-earth p-4 flex items-center justify-between cursor-move">
-                  <div className="flex items-center gap-2 text-white">
-                    <Users className="w-5 h-5" />
-                    <span className="font-serif font-bold">O Ancião da Tribo</span>
+              <div className="bg-white rounded-[32px] shadow-2xl border-4 border-paleo-earth overflow-hidden flex flex-col max-h-[80vh] md:max-h-[500px]">
+                <div className="elder-handle bg-paleo-earth p-5 flex items-center justify-between cursor-move">
+                  <div className="flex items-center gap-3 text-white">
+                    <div className="bg-white/20 p-1.5 rounded-lg">
+                      <Users className="w-5 h-5" />
+                    </div>
+                    <span className="font-serif font-bold text-lg">O Ancião da Tribo</span>
                   </div>
                   <button 
                     onClick={() => setState(prev => ({ ...prev, isElderOpen: false }))}
-                    className="text-white/70 hover:text-white"
+                    className="no-drag p-2 hover:bg-white/10 rounded-full transition-colors text-white/80 hover:text-white"
+                    aria-label="Fechar"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-6 h-6" />
                   </button>
                 </div>
                 
-                <div className="p-6 overflow-y-auto custom-scrollbar bg-paleo-sand/5">
+                <div className="p-6 overflow-y-auto custom-scrollbar bg-paleo-sand/5 flex-grow">
                   {isAnalyzing ? (
-                    <div className="flex flex-col items-center py-8 space-y-3">
-                      <div className="w-8 h-8 border-3 border-paleo-fire border-t-transparent rounded-full animate-spin" />
-                      <p className="text-sm italic text-paleo-earth">Escutando os ventos...</p>
+                    <div className="flex flex-col items-center py-12 space-y-4">
+                      <Loader2 className="w-10 h-10 text-paleo-fire animate-spin" />
+                      <p className="text-base italic text-paleo-earth font-medium">Escutando os ventos...</p>
                     </div>
                   ) : state.elderFeedback ? (
-                    <div className="space-y-4">
-                      <div className={`p-4 rounded-2xl ${state.elderFeedback.hasErrors ? 'bg-red-50 border border-red-100' : 'bg-green-50 border border-green-100'}`}>
-                        <div className="flex items-center gap-2 mb-2">
+                    <div className="space-y-6">
+                      <div className={`p-5 rounded-2xl ${state.elderFeedback.hasErrors ? 'bg-red-50 border-2 border-red-100' : 'bg-green-50 border-2 border-green-100'}`}>
+                        <div className="flex items-center gap-2 mb-3">
                           {state.elderFeedback.hasErrors ? (
-                            <AlertTriangle className="w-5 h-5 text-red-600" />
+                            <AlertTriangle className="w-6 h-6 text-red-600" />
                           ) : (
-                            <CheckCircle2 className="w-5 h-5 text-green-600" />
+                            <CheckCircle2 className="w-6 h-6 text-green-600" />
                           )}
-                          <span className={`font-bold text-sm ${state.elderFeedback.hasErrors ? 'text-red-700' : 'text-green-700'}`}>
+                          <span className={`font-bold text-base ${state.elderFeedback.hasErrors ? 'text-red-700' : 'text-green-700'}`}>
                             {state.elderFeedback.hasErrors ? 'Algo não está certo...' : 'Sabedoria reconhecida!'}
                           </span>
                         </div>
-                        <div className="prose prose-sm max-w-none text-gray-800 elder-markdown">
+                        <div className="prose prose-sm max-w-none text-gray-800 elder-markdown leading-relaxed">
                           <ReactMarkdown>{state.elderFeedback.message}</ReactMarkdown>
                         </div>
                       </div>
                       
                       {state.elderFeedback.suggestions.length > 0 && (
-                        <div className="space-y-2">
-                          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Caminhos de Reflexão:</p>
-                          <div className="flex flex-col gap-2">
+                        <div className="space-y-3">
+                          <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Caminhos de Reflexão:</p>
+                          <div className="flex flex-col gap-2.5">
                             {state.elderFeedback.suggestions.map((s, i) => (
-                              <div key={i} className="flex gap-2 items-start text-xs bg-white border border-paleo-sand p-2 rounded-lg text-paleo-earth italic">
-                                <Sparkles className="w-3 h-3 shrink-0 mt-0.5 text-paleo-fire" />
+                              <div key={i} className="flex gap-3 items-start text-sm bg-white border border-paleo-sand/50 p-3 rounded-xl text-paleo-earth italic shadow-sm">
+                                <Sparkles className="w-4 h-4 shrink-0 mt-0.5 text-paleo-fire" />
                                 <span>{s}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                       )}
+
+                      <button 
+                        onClick={() => setState(prev => ({ ...prev, isElderOpen: false }))}
+                        className="w-full py-3 bg-paleo-earth text-white rounded-xl font-bold hover:bg-paleo-cave transition-all shadow-md"
+                      >
+                        Entendido, Ancião
+                      </button>
                     </div>
                   ) : null}
                 </div>
-                <div className="p-4 bg-gray-50 text-[10px] text-center text-gray-400 border-t border-gray-100">
-                  Segure na barra superior para mover o Ancião
+                <div className="p-3 bg-gray-50 text-[10px] text-center text-gray-400 border-t border-gray-100 font-bold uppercase tracking-widest">
+                  Arraste pela barra superior
                 </div>
               </div>
             </motion.div>
